@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tell Me!</string>
+    <string name="signup">Daftar</string>
+    <string name="login">Mlebu</string>
+    <string name="message_welcome_page">Critakna cerita sampeyan marang donya. Paringana ngerti!</string>
+    <string name="title_welcome_page">Sugeng Rawuh ing Tell Me!</string>
+    <string name="title_signup_page">Lengkapi informasi ing ngisor iki</string>
+    <string name="email" translatable="false">Email</string>
+    <string name="password">Sandi</string>
+    <string name="message_login_page">Mangga lebokna data panjenengan luwih dhisik</string>
+    <string name="title_login_page">Wis siap crita?</string>
+    <string name="name">Jeneng</string>
+    <string name="message_main_page">Sugeng crita.</string>
+    <string name="greeting">Halo %1$s,</string>
+    <string name="logout">Metu</string>
+    <string name="user_photo">Foto Pengguna</string>
+    <string name="content_photo">Foto Konten</string>
+    <string name="like_icon">Ikon Seneng</string>
+    <string name="view_location_on_map">Delok Lokasi ing Peta</string>
+    <string name="like">Seneng</string>
+    <string name="add_story">Tambah Crita</string>
+    <string name="description">Deskripsi</string>
+    <string name="gallery">Galeri</string>
+    <string name="camera">Kamera</string>
+    <string name="upload_story">Unggah Crita</string>
+    <string name="change_lang">Ganti Boso</string>
+    <string name="appwidget_text">CERITO ANYAR</string>
+    <string name="add_widget">Nganggo widget</string>
+    <string name="app_widget_description">Delokne crito anyar</string>
+    <string name="empty_text">RAONO DATA</string>
+    <string name="alert">Ingfo!</string>
+    <string name="fill_all_field">Isi kabeh kolome dul!</string>
+    <string name="account_created">Jos! Akun digawe!</string>
+    <string name="failed">Ra keno!</string>
+    <string name="welcome_back">Heh, Sugeng rawuh malih!</string>
+    <string name="password_length">Password ra keno nek ngisor 8 karakter!</string>
+    <string name="invalid_email">Email ra bener</string>
+    <string name="permission_denied">Ijin ora dikeni</string>
+    <string name="upload_story_success">Cerito wes dikirim!</string>
+    <string name="no_image_picked">Ora ono gambar dipilih</string>
+    <string name="no_image_captured">Ora ono sek dipoto</string>
+    <string name="process_canceled">Ora sido diproses</string>
+    <string name="pick_image">Isinen poto!</string>
+    <string name="fill_description">Deskripsi kui isinen</string>
+    <string name="image_not_found">Poto ora ketemu!</string>
+</resources>

@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">Tell Me!</string>
+    <string name="signup">Sign Up</string>
+    <string name="login">Sign In</string>
+    <string name="message_welcome_page">Tell the world about your story. Let them know!</string>
+    <string name="title_welcome_page">Welcome to Tell Me!</string>
+    <string name="title_signup_page">Complete your information below</string>
+    <string name="email" translatable="false">Email</string>
+    <string name="password">Password</string>
+    <string name="message_login_page">Please enter your data first</string>
+    <string name="title_login_page">Ready to tell me?</string>
+    <string name="name">Name</string>
+    <string name="message_main_page">Happy storytelling.</string>
+    <string name="greeting">Hello %1$s,</string>
+    <string name="logout">Log Out</string>
+    <string name="user_photo">User Photo</string>
+    <string name="content_photo">Content Photo</string>
+    <string name="like_icon">Like Icon</string>
+    <string name="view_location_on_map">View Location on Map</string>
+    <string name="like">Like</string>
+    <string name="add_story">Add Story</string>
+    <string name="description">Description</string>
+    <string name="gallery">Gallery</string>
+    <string name="camera">Camera</string>
+    <string name="upload_story">Upload Story</string>
+    <string name="change_lang">Change Language</string>
+    <string name="appwidget_text">NEW STORY</string>
+    <string name="add_widget">Add widget</string>
+    <string name="app_widget_description">Show latest story</string>
+    <string name="empty_text">NO DATA</string>
+    <string name="alert">Alert!</string>
+    <string name="fill_all_field">Make sure to fill all fields!</string>
+    <string name="account_created">Yey! Account created!</string>
+    <string name="failed">Failed!</string>
+    <string name="welcome_back">Hi, Welcome back!</string>
+    <string name="password_length">Password cannot less than 8 character!</string>
+    <string name="invalid_email">Email is invalid</string>
+    <string name="permission_denied">Permission request denied</string>
+    <string name="upload_story_success">Story uploaded successfully!</string>
+    <string name="no_image_picked">No image picked</string>
+    <string name="no_image_captured">No image captured</string>
+    <string name="process_canceled">Process canceled</string>
+    <string name="pick_image">Add  image!</string>
+    <string name="fill_description">Fill the description field!</string>
+    <string name="image_not_found">Image not found!</string>
+</resources>

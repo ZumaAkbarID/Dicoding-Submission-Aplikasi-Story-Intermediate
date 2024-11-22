@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tell Me!</string>
+    <string name="signup">Daftar</string>
+    <string name="login">Masuk</string>
+    <string name="message_welcome_page">Ceritakan kisahmu kepada dunia. Biarkan mereka tahu!</string>
+    <string name="title_welcome_page">Selamat Datang di Tell Me!</string>
+    <string name="title_signup_page">Lengkapi informasi di bawah ini</string>
+    <string name="email" translatable="false">Email</string>
+    <string name="password">Kata Sandi</string>
+    <string name="message_login_page">Silakan masukkan data Anda terlebih dahulu</string>
+    <string name="title_login_page">Siap untuk bercerita?</string>
+    <string name="name">Nama</string>
+    <string name="message_main_page">Selamat bercerita.</string>
+    <string name="greeting">Halo %1$s,</string>
+    <string name="logout">Keluar</string>
+    <string name="user_photo">Foto Pengguna</string>
+    <string name="content_photo">Foto Konten</string>
+    <string name="like_icon">Ikon Suka</string>
+    <string name="view_location_on_map">Lihat Lokasi di Peta</string>
+    <string name="like">Suka</string>
+    <string name="add_story">Tambah Cerita</string>
+    <string name="description">Deskripsi</string>
+    <string name="gallery">Galeri</string>
+    <string name="camera">Kamera</string>
+    <string name="upload_story">Unggah Cerita</string>
+    <string name="change_lang">Ganti Bahasa</string>
+    <string name="appwidget_text">CERITA BARU</string>
+    <string name="add_widget">Tambah widget</string>
+    <string name="app_widget_description">Tampilkan cerita terbaru</string>
+    <string name="empty_text">DATA KOSONG</string>
+    <string name="alert">Perhatian!</string>
+    <string name="fill_all_field">Pastikan mengisi semua kolom!</string>
+    <string name="account_created">Yay! Akun dibuat!</string>
+    <string name="failed">Gagal!</string>
+    <string name="welcome_back">Hai, Selamat datang kembali!</string>
+    <string name="password_length">Password tidak bisa dibawah 8 karakter!</string>
+    <string name="invalid_email">Email tidak valid</string>
+    <string name="permission_denied">Perizinan tidak diberikan</string>
+    <string name="upload_story_success">Cerita berhasil dikirim!</string>
+    <string name="no_image_picked">Tidak ada gambar dipilih</string>
+    <string name="no_image_captured">Tidak ada gambar diambil</string>
+    <string name="process_canceled">Proses dibatalkan</string>
+    <string name="pick_image">Tambahkan Gambar!</string>
+    <string name="fill_description">Isi kolom deskripsi</string>
+    <string name="image_not_found">Gambar tidak ditemukan!</string>
+</resources>
