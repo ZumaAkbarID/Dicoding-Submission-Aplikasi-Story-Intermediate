@@ -8,22 +8,19 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.rwa.tellme.R
 import com.rwa.tellme.data.Result
 import com.rwa.tellme.databinding.ActivityLoginBinding
-import com.rwa.tellme.di.AuthInjection
-import com.rwa.tellme.di.StoryInjection
 import com.rwa.tellme.utils.showAlertDialog
 import com.rwa.tellme.utils.showToastMessage
+import com.rwa.tellme.utils.wrapEspressoIdlingResource
 import com.rwa.tellme.view.ViewModelFactory
 import com.rwa.tellme.view.customview.EmailEditText
 import com.rwa.tellme.view.customview.PasswordEditText
 import com.rwa.tellme.view.main.MainActivity
-import com.rwa.tellme.view.main.MainViewModel
 import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
@@ -110,12 +107,15 @@ class LoginActivity : AppCompatActivity() {
 
                         viewModel.getSession().observe(this@LoginActivity) { session ->
                             if (session.isLogin) {
-                                val intent = Intent(baseContext, MainActivity::class.java)
-                                intent.flags =
-                                    Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                                startActivity(intent)
-                                showToastMessage(baseContext, getString(R.string.welcome_back))
-                                finish()
+                                wrapEspressoIdlingResource {
+                                    viewModel.setTokenToInterceptor(session.token)
+                                    val intent = Intent(baseContext, MainActivity::class.java)
+                                    intent.flags =
+                                        Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                    startActivity(intent)
+                                    showToastMessage(baseContext, getString(R.string.welcome_back))
+                                    finish()
+                                }
                             }
                         }
                     }

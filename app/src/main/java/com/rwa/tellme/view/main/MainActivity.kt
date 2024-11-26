@@ -11,13 +11,16 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.rwa.tellme.R
 import com.rwa.tellme.databinding.ActivityMainBinding
+import com.rwa.tellme.utils.wrapEspressoIdlingResource
 import com.rwa.tellme.view.StoryViewModelFactory
 import com.rwa.tellme.view.ViewModelFactory
 import com.rwa.tellme.view.addnew.AddNewStoryActivity
+import com.rwa.tellme.view.maps.MapsActivity
 import com.rwa.tellme.view.welcome.WelcomeActivity
 
 class MainActivity : AppCompatActivity() {
@@ -33,20 +36,24 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        progressBar = binding.progressBarMain
         setupAuthViewModel()
 
         viewModel.getSession().observe(this) { user ->
-            if (!user.isLogin) {
-                startActivity(Intent(this, WelcomeActivity::class.java))
-                finish()
-            } else {
-                setupStoryViewModel()
-                observeViewModel()
-                loadStoryData()
+            wrapEspressoIdlingResource {
+                if (!user.isLogin) {
+                    viewModel.clearTokenFromInterceptor()
+                    startActivity(Intent(this, WelcomeActivity::class.java))
+                    finish()
+                } else {
+                    viewModel.initTokenInterceptor(this)
+                    setupStoryViewModel()
+                    observeViewModel()
+                    loadStoryData()
+                }
             }
         }
 
-        setupProgressBar()
         setupView()
         setupAction()
         setupRV()
@@ -60,15 +67,43 @@ class MainActivity : AppCompatActivity() {
     private fun setupStoryViewModel() {
         val storyFactory = StoryViewModelFactory.getInstance(this)
         storyViewModel = ViewModelProvider(this, storyFactory)[MainStoryViewModel::class.java]
+
+        storyViewModel?.isLoading?.observe(this) { isLoading ->
+            if (isLoading) {
+                progressBar.visibility = View.VISIBLE
+            } else {
+                progressBar.visibility = View.GONE
+            }
+        }
     }
 
     private fun loadStoryData() {
-        storyViewModel?.showAllStory()
-    }
+        adapter = ListStoryAdapter()
+        binding.rvStory.adapter = adapter.withLoadStateFooter(
+            footer = LoadingStateAdapter {
+                adapter.retry()
+            }
+        )
 
-    override fun onResume() {
-        super.onResume()
-        loadStoryData()
+        storyViewModel?.story?.observe(this) {
+            adapter.submitData(lifecycle, it)
+        }
+
+        adapter.addLoadStateListener { loadState ->
+            val isLoading = loadState.refresh is LoadState.Loading
+            binding.progressBarMain.visibility = if (isLoading) View.VISIBLE else View.GONE
+
+            val isListEmpty = (loadState.refresh is LoadState.NotLoading && adapter.itemCount == 0) || (loadState.refresh is LoadState.Error && adapter.itemCount == 0)
+            binding.textMessage.visibility = if (isListEmpty) View.VISIBLE else View.GONE
+
+            val errorState = loadState.refresh as? LoadState.Error
+                ?: loadState.append as? LoadState.Error
+                ?: loadState.prepend as? LoadState.Error
+
+            errorState?.let {
+                storyViewModel?.setErrorMessage(it.error.localizedMessage)
+            }
+        }
     }
 
     private fun setupView() {
@@ -100,6 +135,11 @@ class MainActivity : AppCompatActivity() {
                     startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))
                     true
                 }
+                R.id.action_maps -> {
+                    val intent = Intent(this, MapsActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
                 else -> false
             }
         }
@@ -109,27 +149,9 @@ class MainActivity : AppCompatActivity() {
         rvStory = binding.rvStory
         rvStory.setHasFixedSize(true)
         rvStory.layoutManager = LinearLayoutManager(this)
-
-        adapter = ListStoryAdapter()
-        rvStory.adapter = adapter
-    }
-
-    private fun setupProgressBar() {
-        progressBar = binding.progressBar
-        storyViewModel?.isLoading?.observe(this) { isLoading ->
-            if (isLoading) {
-                progressBar.visibility = View.VISIBLE
-            } else {
-                progressBar.visibility = View.GONE
-            }
-        }
     }
 
     private fun observeViewModel() {
-        storyViewModel?.listStory?.observe(this) { stories ->
-            adapter.submitList(stories)
-        }
-
         storyViewModel?.errorMessage?.observe(this) { errorMessage ->
             errorMessage?.let {
                 Toast.makeText(this, it, Toast.LENGTH_SHORT).show()

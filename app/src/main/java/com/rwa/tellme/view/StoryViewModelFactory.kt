@@ -11,6 +11,7 @@ import com.rwa.tellme.view.addnew.AddNewStoryViewModel
 import com.rwa.tellme.view.login.LoginViewModel
 import com.rwa.tellme.view.main.MainStoryViewModel
 import com.rwa.tellme.view.main.MainViewModel
+import com.rwa.tellme.view.maps.MapsViewModel
 import com.rwa.tellme.view.signup.SignupViewModel
 
 class StoryViewModelFactory : ViewModelProvider.NewInstanceFactory() {
@@ -28,6 +29,9 @@ class StoryViewModelFactory : ViewModelProvider.NewInstanceFactory() {
                 }
                 modelClass.isAssignableFrom(AddNewStoryViewModel::class.java) -> {
                     AddNewStoryViewModel(storyRepository) as T
+                }
+                modelClass.isAssignableFrom(MapsViewModel::class.java) -> {
+                    MapsViewModel(storyRepository) as T
                 }
                 else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
             }

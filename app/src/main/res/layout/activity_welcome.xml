@@ -10,6 +10,7 @@
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="0dp"
+        android:contentDescription="@string/pick_image"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineHorizontal"
         app:layout_constraintEnd_toEndOf="parent"

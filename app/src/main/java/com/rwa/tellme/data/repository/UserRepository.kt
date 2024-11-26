@@ -50,11 +50,7 @@ class UserRepository private constructor(
             } else {
                 appExecutors.mainThread.execute {
                     val errorBody = Gson().fromJson(response.errorBody()?.string(), ErrorResponse::class.java)
-                    if (errorBody.message != null) {
-                        message = errorBody.message
-                    } else {
-                        message = response.message()
-                    }
+                    message = errorBody.message ?: response.message()
 
                     result.value = Result.Error("Registration failed: $message")
                 }

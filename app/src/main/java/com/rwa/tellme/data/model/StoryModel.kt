@@ -1,6 +1,7 @@
 package com.rwa.tellme.data.model
 
 import android.os.Parcelable
+import androidx.room.Entity
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

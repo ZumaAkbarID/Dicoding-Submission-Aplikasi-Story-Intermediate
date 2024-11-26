@@ -44,4 +44,13 @@
     <string name="pick_image">Tambahkan Gambar!</string>
     <string name="fill_description">Isi kolom deskripsi</string>
     <string name="image_not_found">Gambar tidak ditemukan!</string>
+    <string name="title_activity_maps">Lokasi Cerita</string>
+    <string name="action_maps">Buka Maps</string>
+    <string name="turn_on_loc">Nyalakan lokasi!</string>
+    <string name="turn_on_loc_message">Lokasi saat ini dimatikan. Nyalakan lokasi agar navigasi berfungsi maksimal!</string>
+    <string name="retry">Coba lagi</string>
+    <string name="data_is_empty">Tidak ada data</string>
+    <string name="add_current_location">Tambahkan lokasi saat ini</string>
+    <string name="maps_app_not_found">Aplikasi Maps tidak ditemukan!</string>
+    <string name="location_not_found">Lokasi tidak ditemukan! Coba lagi!</string>
 </resources>

@@ -14,7 +14,7 @@ class AddNewStoryViewModel(private val storyRepository: StoryRepository) : ViewM
     private val _uploadResult = MutableLiveData<Result<StoryUploadResponse>>()
     val uploadResult: LiveData<Result<StoryUploadResponse>> = _uploadResult
 
-    fun uploadStory(description: String, photoFile: File, lat: Float? = null, lon: Float? = null) {
+    fun uploadStory(description: String, photoFile: File, lat: Double? = null, lon: Double? = null) {
         _uploadResult.value = Result.Loading
         viewModelScope.launch {
             val result = storyRepository.uploadStory(description, photoFile, lat, lon)

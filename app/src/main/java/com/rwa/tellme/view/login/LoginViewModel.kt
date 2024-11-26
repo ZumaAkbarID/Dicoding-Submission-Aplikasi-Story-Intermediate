@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.rwa.tellme.data.Result
 import com.rwa.tellme.data.repository.UserRepository
 import com.rwa.tellme.data.model.UserModel
+import com.rwa.tellme.data.remote.retrofit.StoryApiConfig
 import kotlinx.coroutines.launch
 
 class LoginViewModel(private val repository: UserRepository) : ViewModel() {
@@ -19,6 +20,10 @@ class LoginViewModel(private val repository: UserRepository) : ViewModel() {
 
     fun getSession(): LiveData<UserModel> {
         return repository.getSession().asLiveData()
+    }
+
+    fun setTokenToInterceptor(token: String) {
+        StoryApiConfig.initAuthInterceptor { token }
     }
 
     private val _loginResult = MutableLiveData<Result<UserModel>>()

@@ -44,4 +44,13 @@
     <string name="pick_image">Isinen poto!</string>
     <string name="fill_description">Deskripsi kui isinen</string>
     <string name="image_not_found">Poto ora ketemu!</string>
+    <string name="title_activity_maps">Nggon Cerito</string>
+    <string name="action_maps">Delok Maps</string>
+    <string name="turn_on_loc">Inpokan Lokasi!</string>
+    <string name="turn_on_loc_message">Lokesyen saiki mati. Uripno nek pengen fungsi kabeh!</string>
+    <string name="retry">Cobo maneh</string>
+    <string name="data_is_empty">Datane ora ono</string>
+    <string name="add_current_location">Tambahke lokasi saiki</string>
+    <string name="maps_app_not_found">Aplikasi Maps ora ono!</string>
+    <string name="location_not_found">Lokasi ora ketemu! Cobo meneh!</string>
 </resources>

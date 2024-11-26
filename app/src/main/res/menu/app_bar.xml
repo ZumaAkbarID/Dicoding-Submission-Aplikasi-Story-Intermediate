@@ -3,8 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <group android:menuCategory="container">
         <item
+            android:id="@+id/action_maps"
+            android:icon="@drawable/ic_map_location_dot_solid_24"
+            android:title="@string/action_maps"
+            app:showAsAction="ifRoom" />
+        <item
             android:id="@+id/action_change_lang"
-            android:icon="@drawable/language_solid_24_white"
+            android:icon="@drawable/ic_language_solid_24_white"
             android:title="@string/change_lang"
             app:showAsAction="ifRoom" />
         <item

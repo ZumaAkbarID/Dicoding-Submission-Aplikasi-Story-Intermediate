@@ -11,6 +11,12 @@ interface StoryApiService {
     @GET("stories")
     suspend fun getStories(): Response<StoryResponse>
 
+    @GET("stories")
+    suspend fun getStories(
+        @Query("page") page: Int = 1,
+        @Query("size") size: Int = 20
+    ): StoryResponse
+
     @Multipart
     @POST("stories")
     suspend fun uploadStory(
@@ -19,4 +25,9 @@ interface StoryApiService {
         @Part("lat") lat: RequestBody?,
         @Part("lon") lon: RequestBody?
     ): Response<StoryUploadResponse>
+
+    @GET("stories")
+    suspend fun getStoriesWithLocation(
+        @Query("location") location : Int = 1,
+    ): Response<StoryResponse>
 }

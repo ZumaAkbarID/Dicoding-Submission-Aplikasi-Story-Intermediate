@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide
 import com.rwa.tellme.R
 import com.rwa.tellme.data.model.StoryModel
 import com.rwa.tellme.databinding.ActivityDetailStoryBinding
+import com.rwa.tellme.utils.showToastMessage
 
 class DetailStoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailStoryBinding
@@ -28,7 +29,7 @@ class DetailStoryActivity : AppCompatActivity() {
     }
 
     private fun setupData() {
-        val story = intent.getParcelableExtra<StoryModel>("Story") as StoryModel
+        val story = intent.getParcelableExtra<StoryModel>(PARCEL_KEY) as StoryModel
 
         Glide.with(applicationContext).load(story.photo).into(binding.ivDetailPhoto)
         binding.tvDetailName.text = story.name
@@ -47,11 +48,19 @@ class DetailStoryActivity : AppCompatActivity() {
         }
 
         binding.btnViewMap.setOnClickListener {
-            val uri = Uri.parse("google.navigation:q="+story.lat+","+story.lon + "&mode=d")
+            val uri = Uri.parse("geo:${story.lat},${story.lon}?q=${story.lat},${story.lon}")
 
             val intent = Intent(Intent.ACTION_VIEW, uri)
             intent.setPackage("com.google.android.apps.maps")
-            startActivity(intent)
+            if (intent.resolveActivity(packageManager) != null) {
+                startActivity(intent)
+            } else {
+                showToastMessage(this, getString(R.string.maps_app_not_found))
+            }
         }
+    }
+
+    companion object {
+        const val PARCEL_KEY = "Story"
     }
 }

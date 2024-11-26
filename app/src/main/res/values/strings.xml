@@ -43,4 +43,17 @@
     <string name="pick_image">Add  image!</string>
     <string name="fill_description">Fill the description field!</string>
     <string name="image_not_found">Image not found!</string>
+    <string name="title_activity_maps">Story Location</string>
+    <string name="action_maps">Open Maps</string>
+    <string name="normal_type" translatable="false">Normal</string>
+    <string name="satellite_type" translatable="false">Satellite</string>
+    <string name="terrain_type" translatable="false">Terrain</string>
+    <string name="hybrid_type" translatable="false">Hybrid</string>
+    <string name="turn_on_loc">Turn on Location!</string>
+    <string name="turn_on_loc_message">Location is currently turned off. Turn on location to enable navigation function!</string>
+    <string name="retry">Try Again</string>
+    <string name="data_is_empty">Data is empty</string>
+    <string name="add_current_location">"Add current location "</string>
+    <string name="maps_app_not_found">Maps application not found!</string>
+    <string name="location_not_found">Location not found! Try again!</string>
 </resources>

@@ -1,11 +1,17 @@
 package com.rwa.tellme.view.addnew
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Looper
+import android.provider.Settings
+import android.util.Log
 import android.view.View
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContract
@@ -14,18 +20,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import com.rwa.tellme.R
 import com.rwa.tellme.data.Result
 import com.rwa.tellme.databinding.ActivityAddNewStoryBinding
-import com.rwa.tellme.di.AuthInjection
-import com.rwa.tellme.di.StoryInjection
 import com.rwa.tellme.utils.getFileFromUri
 import com.rwa.tellme.utils.getImageUri
 import com.rwa.tellme.utils.reduceFileImage
 import com.rwa.tellme.utils.showAlertDialog
 import com.rwa.tellme.utils.showToastMessage
 import com.rwa.tellme.view.StoryViewModelFactory
-import com.rwa.tellme.view.ViewModelFactory
 import com.rwa.tellme.view.main.MainActivity
 import com.yalantis.ucrop.UCrop
 import java.io.File
@@ -35,38 +44,19 @@ class AddNewStoryActivity : AppCompatActivity() {
     private var currentImageUri: Uri? = null
     private lateinit var addNewStoryViewModel: AddNewStoryViewModel
 
-    private val requestPermissionLauncher =
-        registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { isGranted: Boolean ->
-            if (!isGranted) {
-                showAlertDialog(
-                    this,
-                    getString(R.string.alert),
-                    getString(R.string.permission_denied)
-                )
-            }
-        }
-
-    private fun allPermissionsGranted() =
-        ContextCompat.checkSelfPermission(
-            this,
-            REQUIRED_PERMISSION
-        ) == PackageManager.PERMISSION_GRANTED
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private var currentLocation: Location? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddNewStoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        if (!allPermissionsGranted()) {
-            requestPermissionLauncher.launch(REQUIRED_PERMISSION)
-        }
-
         setupViewModel()
         setupGalleryAction()
         setupCameraAction()
         setupUploadAction()
+        getMyLocation()
     }
 
     private fun setupViewModel() {
@@ -153,11 +143,35 @@ class AddNewStoryActivity : AppCompatActivity() {
 
     private fun setupCameraAction() {
         binding.btnCamera.setOnClickListener {
-            currentImageUri = getImageUri(this)
-            launcherIntentCamera.launch(currentImageUri!!)
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    REQUIRED_PERMISSION
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                openCamera()
+            } else {
+                requestPermissionLauncher.launch(REQUIRED_PERMISSION)
+            }
         }
     }
 
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                openCamera()
+            } else {
+                showAlertDialog(
+                    this,
+                    getString(R.string.alert),
+                    getString(R.string.permission_denied)
+                )
+            }
+        }
+
+    private fun openCamera() {
+        currentImageUri = getImageUri(this)
+        launcherIntentCamera.launch(currentImageUri!!)
+    }
 
     private fun validateForm(): String {
         return if (currentImageUri == null) {
@@ -177,6 +191,90 @@ class AddNewStoryActivity : AppCompatActivity() {
         } ?: showAlertDialog(this, getString(R.string.alert), getString(R.string.image_not_found))
     }
 
+    private fun getMyLocation() {
+        binding.checkboxAddLocation.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                if (ContextCompat.checkSelfPermission(
+                        this,
+                        LOCATION_PERMISSION
+                    ) == PackageManager.PERMISSION_GRANTED
+                ) {
+                    if (ContextCompat.checkSelfPermission(
+                            this,
+                            LOCATION_COARSE_PERMISSION
+                        ) == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        checkLocationStatus()
+                    } else {
+                        requestPermissionLauncherForLocation.launch(LOCATION_COARSE_PERMISSION)
+                        buttonView.isChecked = false
+                    }
+                } else {
+                    requestPermissionLauncherForLocation.launch(LOCATION_PERMISSION)
+                    buttonView.isChecked = false
+                }
+            }
+        }
+    }
+
+    private val requestPermissionLauncherForLocation =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                checkLocationStatus()
+            } else {
+                showAlertDialog(
+                    this,
+                    getString(R.string.alert),
+                    getString(R.string.permission_denied)
+                )
+            }
+        }
+
+    private val mLocationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) {
+            currentLocation = locationResult.lastLocation
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun requestNewLocationData() {
+        val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 100L)
+            .setWaitForAccurateLocation(true)
+            .setMinUpdateIntervalMillis(100L)
+            .setMaxUpdateDelayMillis(100L)
+            .build()
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+        fusedLocationProviderClient.requestLocationUpdates(
+            locationRequest, mLocationCallback,
+            Looper.myLooper()
+        )
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun checkLocationStatus() {
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            showAlertDialog(
+                this,
+                getString(R.string.turn_on_loc),
+                getString(R.string.turn_on_loc_message)
+            ) {
+                val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                startActivity(intent)
+            }
+        } else {
+            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+            fusedLocationProviderClient.lastLocation.addOnCompleteListener(this) { task ->
+                currentLocation = task.result
+                if(currentLocation == null) {
+                    requestNewLocationData()
+                }
+            }
+            binding.checkboxAddLocation.isChecked = true
+        }
+    }
+
     private fun setupUploadAction() {
         binding.buttonAdd.setOnClickListener {
             if (validateForm().isNotEmpty()) {
@@ -186,8 +284,26 @@ class AddNewStoryActivity : AppCompatActivity() {
 
             val imageFile: File? = getFileFromUri(baseContext, currentImageUri!!)?.reduceFileImage()
 
+            val lon = currentLocation?.longitude
+            val lat = currentLocation?.latitude
+
+            if (binding.checkboxAddLocation.isChecked && (lon == null || lat == null)) {
+                showAlertDialog(
+                    this,
+                    getString(R.string.alert),
+                    getString(R.string.location_not_found)
+                )
+                binding.checkboxAddLocation.isChecked = false
+                return@setOnClickListener
+            }
+
             imageFile?.let {
-                addNewStoryViewModel.uploadStory(binding.edAddDescription.text.toString(), it)
+                addNewStoryViewModel.uploadStory(
+                    binding.edAddDescription.text.toString(),
+                    it,
+                    lat,
+                    lon
+                )
             }
         }
     }
@@ -199,5 +315,7 @@ class AddNewStoryActivity : AppCompatActivity() {
 
     companion object {
         private const val REQUIRED_PERMISSION = Manifest.permission.CAMERA
+        private const val LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION
+        private const val LOCATION_COARSE_PERMISSION = Manifest.permission.ACCESS_COARSE_LOCATION
     }
 }

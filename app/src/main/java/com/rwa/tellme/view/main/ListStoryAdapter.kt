@@ -15,8 +15,9 @@ import com.rwa.tellme.data.model.StoryModel
 import com.rwa.tellme.databinding.ItemRowStoryBinding
 import com.rwa.tellme.view.detail.DetailStoryActivity
 import androidx.core.util.Pair
+import androidx.paging.PagingDataAdapter
 
-class ListStoryAdapter: ListAdapter<StoryModel, ListStoryAdapter.ListViewHolder>(DIFF_CALLBACK) {
+class ListStoryAdapter: PagingDataAdapter<StoryModel, ListStoryAdapter.ListViewHolder>(DIFF_CALLBACK) {
 
     class ListViewHolder(private val binding: ItemRowStoryBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(story: StoryModel) {
@@ -45,7 +46,9 @@ class ListStoryAdapter: ListAdapter<StoryModel, ListStoryAdapter.ListViewHolder>
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
         val story = getItem(position)
-        holder.bind(story)
+        if (story !== null) {
+            holder.bind(story)
+        }
     }
 
     companion object {
